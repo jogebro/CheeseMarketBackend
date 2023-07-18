@@ -1,4 +1,5 @@
 const Usuario = require('../models/Usuario.js');
+const bcryptjs = require('bcryptjs');
 
 const getUsers = (req, res)=>{
     res.json({
@@ -7,8 +8,19 @@ const getUsers = (req, res)=>{
 }
 
 const postUsers = async (req, res)=>{
-    const body = req.body;
-    const usuario = new Usuario(body);
+    const {nombre, email, password, rol} = req.body
+    const usuario = new Usuario({nombre, email, password, rol});
+    //Verificar correo duplicado
+    const emailExists = await Usuario.findOne({email});
+    if (emailExists) {
+        return res.status(400).json({
+            msg: "Email already exists"
+        })
+    }
+    //Encriptar nuestra contraseña
+    const salt = bcryptjs.genSaltSync();
+    usuario.password = bcryptjs.hashSync(password, salt)
+
     await usuario.save();
     res.json({
         "message":"post api",

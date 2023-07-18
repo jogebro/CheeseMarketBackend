@@ -9,7 +9,7 @@ const UsuarioSchema = Schema({
     email:{
         type: String,
         required: [true, 'Email is Required'],
-        unique: [true, 'Email already exists']
+        unique: true
     },
 
     password:{
@@ -25,7 +25,7 @@ const UsuarioSchema = Schema({
         type: String,
         required: true,
         default: 'USER',
-        enum: ['ADMIN','USER']
+        /* enum: ['ADMIN','USER'] */
     },
 
     estado:{
